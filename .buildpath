@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/Breadcrumb NavXT"/>
+	<buildpathentry external="true" kind="lib" path="Z:/localhost/htdocs/wp-content/plugins/wordpress-seo"/>
+	<buildpathentry kind="src" path=""/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry external="true" kind="lib" path="Z:/WordPress"/>
+</buildpath>
