@@ -3,14 +3,14 @@
 Plugin Name: Breadcrumb NavXT Schema
 Plugin URI: https://mtekk.us/extensions/breadcrumb-navxt-schema
 Description: Extension to Breadcrumb NavXT, injects Breadcrumb NavXT's JSON-LD schema.org data into Yoast SEO schema block. For details on how to use this plugin visit <a href="http://mtekk.us/extensions/breadcrumb-navxt-schema">Breadcrumb NavXT Schema</a>. 
-Version: 1.0.0
+Version: 1.0.1
 Author: John Havlik
 Author URI: http://mtekk.us/
 License: GPL2
 TextDomain: breadcrumb-navxt-schema
 DomainPath: /languages/
 */
-/*  Copyright 2013-2019  John Havlik  (email : john.havlik@mtekk.us)
+/*  Copyright 2013-2023  John Havlik  (email : john.havlik@mtekk.us)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ if(!class_exists('mtekk_plugkit_extension'))
 }
 class bcn_schema extends mtekk_plugkit_extension
 {
-	const version = '1.0.0';
+	const version = '1.0.1';
 	protected $full_name = 'Breadcrumb NavXT Schema';
 	protected $short_name = 'Schema';
 	protected $identifier = 'breadcrumb-navxt';
@@ -64,7 +64,6 @@ class bcn_schema extends mtekk_plugkit_extension
 	{
 		//We set the plugin basename here, could manually set it, but this is for demonstration purposes
 		$this->plugin_basename = plugin_basename(__FILE__);
-		add_filter('bcn_settings_init', array($this, 'settings_setup'));
 		//add_action('plugins_loaded', array($this, 'plugins_loaded_pre_bcn'), 10);
 		//We're going to make sure we load the parent's constructor
 		parent::__construct();
@@ -95,11 +94,6 @@ class bcn_schema extends mtekk_plugkit_extension
 	 */
 	public function settings_setup($settings)
 	{
-		/*if(!isset($settings['Suse_menu']))
-		{
-			//Add our 'default' use_menu option
-			$settings['Suse_menu'] = 'main-menu';
-		}*/
 		//Don't run through parent as we are not premium
 		return $settings;
 	}
@@ -125,8 +119,8 @@ class bcn_schema extends mtekk_plugkit_extension
 	}
 	public function admin_setup()
 	{
-		require_once(dirname(__FILE__) . '/class.bcn_schema_admin.php');
-		$this->admin = new bcn_mm_admin(plugin_basename(__FILE__), $this->product_prefix, $this->full_name);
+		//require_once(dirname(__FILE__) . '/class.bcn_schema_admin.php');
+		//$this->admin = new bcn_mm_admin(plugin_basename(__FILE__), $this->product_prefix, $this->full_name);
 	}
 	public function plugins_loaded_pre_bcn()
 	{

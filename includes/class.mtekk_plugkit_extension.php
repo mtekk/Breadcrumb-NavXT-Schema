@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright 2015-2019  John Havlik  (email : john.havlik@mtekk.us)
+	Copyright 2015-2021  John Havlik  (email : john.havlik@mtekk.us)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-require_once(dirname(__FILE__) . '/block_direct_access.php');
+require_once(__DIR__ . '/block_direct_access.php');
+use mtekk\adminKit\setting;
 class mtekk_plugkit_extension // extends mtekk_plugkit //Eventually, someday
 {
 	protected $version;
@@ -43,20 +44,58 @@ class mtekk_plugkit_extension // extends mtekk_plugkit //Eventually, someday
 	 */
 	public function settings_setup($settings)
 	{
-		if(!isset($settings['S' . $this->product_prefix . '_key']))
+		//BCN 7.0 compat
+		if(class_exists('mtekk\adminKit\setting\setting_bool'))
 		{
-			//Add our 'default' paths_key option
-			$settings['S' . $this->product_prefix . '_key'] = '';
+			if(!class_exists('mtekk\adminKit\setting\setting_string_nosave'))
+			{
+				require_once(__DIR__ . '/adminKit/setting/class-mtekk_adminkit_setting_string_nosave.php');
+			}
+			if(!isset($settings['S' . $this->product_prefix . '_key']))
+			{
+				//Add our 'default' _key option
+				$settings['S' . $this->product_prefix . '_key'] = new setting\setting_string(
+						$this->product_prefix . '_key',
+						'',
+						__('License Key', $this->identifier));
+			}
+			if(!isset($settings['J' . $this->product_prefix . '_key_status']))
+			{
+				//Add our 'default' _key_status option
+				$settings['J' . $this->product_prefix . '_key_status'] = new setting\setting_string_nosave(
+						$this->product_prefix . '_key_status',
+						'inactive',
+						'License Key Status'
+						);
+			}
+			if(!isset($settings['J' . $this->product_prefix . '_key_site_active']))
+			{
+				//Add our 'default' _key_site_active option
+				$settings['J' . $this->product_prefix . '_key_site_active'] = new setting\setting_string_nosave(
+						$this->product_prefix . '_key_site_active',
+						'',
+						'License Key Activated Site'
+						);
+			}
 		}
-		if(!isset($settings['J' . $this->product_prefix . '_key_status']))
+		//Legacy compat
+		else
 		{
-			//Add our 'default' paths_key_status option
-			$settings['J' . $this->product_prefix . '_key_status'] = 'inactive';
-		}
-		if(!isset($settings['J' . $this->product_prefix . '_key_site_active']))
-		{
-			//Add our 'default' Jmenu_magic_key_site_active option
-			$settings['J' . $this->product_prefix . '_key_site_active'] = '';
+			if(!isset($settings['S' . $this->product_prefix . '_key']))
+			{
+				//Add our 'default' paths_key option
+				$settings['S' . $this->product_prefix . '_key'] = '';
+			}
+			if(!isset($settings['J' . $this->product_prefix . '_key_status']))
+			{
+				//Add our 'default' paths_key_status option
+				$settings['J' . $this->product_prefix . '_key_status'] = 'inactive';
+			}
+			if(!isset($settings['J' . $this->product_prefix . '_key_site_active']))
+			{
+				//Add our 'default' Jmenu_magic_key_site_active option
+				$settings['J' . $this->product_prefix . '_key_site_active'] = '';
+			}
 		}
 		return $settings;
 	}
@@ -129,7 +168,7 @@ class mtekk_plugkit_extension // extends mtekk_plugkit //Eventually, someday
 			}
 			return;
 		}
-		if(is_admin() && $this->base_plugin_active() && class_exists('mtekk_adminKit'))
+		if(is_admin() && $this->base_plugin_active() && (class_exists('mtekk_adminKit') || class_exists('mtekk\adminKit\adminKit')))
 		{
 			//Check to see if someone else has setup the extensions settings tab
 			if(has_action('bcn_after_settings_tabs', 'bcn_extensions_tab') === false)
